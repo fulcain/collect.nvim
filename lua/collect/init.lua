@@ -1,20 +1,19 @@
 local M = {}
 
--- Another way of adding a method to lua table
--- function M.setup()
--- end
---
-
-M.setup = function (opts)
-	-- validate the options table
+function M.setup(opts)
+	-- Validate table
 	opts = opts or {}
 
-	vim.keymap.set("n", "<Leader>h", function()
-		if opts.name then
-			print("hello, " .. opts.name)
-		else
-			print("hello")
-		end
+	local collect_name = opts.collect_name
+	local collectNameParameter = collect_name and collect_name or "collect.lua"
+
+	M.open_collect(collectNameParameter)
+end
+
+-- Opens a buffer that is called the collect buffer
+function M.open_collect(collect_name)
+	vim.keymap.set("n", "<Leader>cn", function()
+		vim.cmd(":vsplit " .. collect_name .. ".lua")
 	end)
 end
 
