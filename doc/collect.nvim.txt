@@ -1,0 +1,14 @@
+================================================================================
+                                                                *collect.nvim*
+
+This plugin is simply a notepad which you type in it and save your data.
+Originally the plugin idea came from saving html attributes such as `class`
+and `id` in notepad that can accessed inside nvim.
+
+                                                              *collect.open()*
+
+This command opens up the collect window. the default kemap for the collect
+window to open is `<leader>cn` that stands for `collect nvim`.
+
+vim:tw=78:ts=8:ft=help:norl:
+
