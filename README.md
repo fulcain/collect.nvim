@@ -6,9 +6,6 @@ A plugin that opens a clipboard (buffer) to collect some data in it.
 
 - [Requirements](#requirements)
 - [Installation](#installation)
-  - [lazy.nvim](#lazynvim)
-  - [packer.nvim](#packernvim)
-  - [vim-plug](#vim-plug)
 - [Default Options](#default-options)
 
 ---
