@@ -22,7 +22,7 @@ local function create_win_config(opts)
 		width = width,
 		height = height,
 		focusable = true,
-		border = "rounded",
+		border = opts.border or "rounded",
 		title = opts.title or "Collect",
 		title_pos = opts.title_pos or "left",
 	}
