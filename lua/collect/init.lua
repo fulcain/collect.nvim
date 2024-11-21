@@ -1,4 +1,12 @@
 local M = {}
+local Path = require("plenary.path")
+local data_path = vim.fn.stdpath("data")
+
+-- Get the current directory (project root)
+local current_dir = vim.fn.getcwd()
+
+-- Use the project-specific path (current directory)
+local cache_config = string.format("%s/%s_collect.json", data_path, vim.fn.fnamemodify(current_dir, ":p:h:t"))
 
 local buf_id = nil
 local win_id = nil
@@ -102,6 +110,7 @@ local function open_window(opts, memory_key)
 			save_buffer_to_memory(memory_key)
 			buf_id = nil
 			win_id = nil
+			M.save_to_file() -- Save to file when the buffer is wiped
 		end,
 	})
 
@@ -118,6 +127,18 @@ local function close_window(memory_key)
 	end
 end
 
+-- Load content from the file (persistent storage)
+function M.load_from_file()
+	local path = Path:new(cache_config)
+	if path:exists() then
+		local json_data = path:read()
+		local decoded = vim.fn.json_decode(json_data)
+		if decoded then
+			content_storage = decoded
+		end
+	end
+end
+
 function M.toggle(opts)
 	local memory_key = "collect_data"
 
@@ -129,5 +150,8 @@ function M.toggle(opts)
 		end
 	end, { desc = "Toggle collect.nvim" })
 end
+
+-- On startup, load content from file
+M.load_from_file()
 
 return M
