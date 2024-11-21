@@ -127,6 +127,18 @@ local function close_window(memory_key)
 	end
 end
 
+-- Save content to a file
+function M.save_to_file()
+  local json_data = vim.fn.json_encode(content_storage)
+  local path = Path:new(cache_config)
+
+  -- Ensure the directory exists before saving
+  path:parent():mkdir({ recursive = true })
+
+  -- Write the data to the file
+  path:write(json_data, "w")
+end
+
 -- Load content from the file (persistent storage)
 function M.load_from_file()
 	local path = Path:new(cache_config)
