@@ -12,7 +12,6 @@ local content_storage = {}
 --- @field title_pos string? Position of the title, either "left", "center", or "right" (default: "left").
 --- @field height number? Height of the floating window (default: 25).
 --- @field width number? Width of the floating window (default: 80).
---- @field border string? Border style for the window (default: "rounded") could be :`none`, `single`, `double` or `shadow`
 --- @field toggleKeymap string? Keymap for toggling the window (default: "<leader>cn").
 
 --- Sets up the module with the given options.
@@ -33,7 +32,7 @@ local function create_win_config(opts)
 		width = width,
 		height = height,
 		focusable = true,
-		border = opts.border or "rounded",
+		border = "single",
 		title = opts.title or "Collect",
 		title_pos = opts.title_pos or "left",
 	}
@@ -128,7 +127,7 @@ function M.toggle(opts)
 		else
 			open_window(opts, memory_key)
 		end
-	end)
+	end, { desc = "Toggle collect.nvim" })
 end
 
 return M
