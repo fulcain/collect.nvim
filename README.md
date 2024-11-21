@@ -69,6 +69,6 @@ collect.setup({
     title_pose = "left",
     height = 25,
     width = 80,
-    toggleKeymap = "<leader>cn"
+    toggle_keymap = "<leader>cn"
 })
 ```

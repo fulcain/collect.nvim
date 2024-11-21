@@ -12,7 +12,7 @@ local content_storage = {}
 --- @field title_pos string? Position of the title, either "left", "center", or "right" (default: "left").
 --- @field height number? Height of the floating window (default: 25).
 --- @field width number? Width of the floating window (default: 80).
---- @field toggleKeymap string? Keymap for toggling the window (default: "<leader>cn").
+--- @field toggle_keymap string? Keymap for toggling the window (default: "<leader>cn").
 
 --- Sets up the module with the given options.
 --- @param opts CollectOptions
@@ -121,7 +121,7 @@ end
 function M.toggle(opts)
 	local memory_key = "collect_data"
 
-	vim.keymap.set("n", opts.toggleKeymap or "<leader>cn", function()
+	vim.keymap.set("n", opts.toggle_keymap or "<leader>cn", function()
 		if win_id and vim.api.nvim_win_is_valid(win_id) then
 			close_window(memory_key)
 		else
