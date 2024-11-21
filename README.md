@@ -13,6 +13,7 @@ A plugin that opens a clipboard (buffer) to collect some data in it.
 ## Requirements
 
 - Neovim >= `0.9.0`
+- [plenary](https://github.com/nvim-lua/plenary.nvim)
 
 ---
 
@@ -27,6 +28,7 @@ A plugin that opens a clipboard (buffer) to collect some data in it.
         local collect = require("collect")
         collect.setup({})
     end,
+    dependencies = { "nvim-lua/plenary.nvim" }
 }
 ```
 
@@ -40,6 +42,7 @@ A plugin that opens a clipboard (buffer) to collect some data in it.
             local collect = require("collect")
             collect.setup({})
         end,
+        requires = { {"nvim-lua/plenary.nvim"} }
     }
 end)
 ```
@@ -50,6 +53,7 @@ end)
 call plug#begin('~/.vim/plugged')
 
 Plug 'fulcain/collect.nvim'
+Plug 'nvim-lua/plenary.nvim' 
 
 call plug#end()
 
