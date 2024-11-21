@@ -18,7 +18,7 @@ A plugin that opens a clipboard (buffer) to collect some data in it.
 
 ## Installation
 
-### [lazy.nvim](https://github.com/folke/lazy.nvim)
+[lazy.nvim](https://github.com/folke/lazy.nvim)
 
 ```lua
 {
@@ -30,7 +30,7 @@ A plugin that opens a clipboard (buffer) to collect some data in it.
 }
 ```
 
-### [packer.nvim](https://github.com/wbthomason/packer.nvim)
+[packer.nvim](https://github.com/wbthomason/packer.nvim)
 
 ```lua
     return require('packer').startup(function(use)
@@ -44,7 +44,7 @@ A plugin that opens a clipboard (buffer) to collect some data in it.
 end)
 ```
 
-### [vim-plug](https://github.com/junegunn/vim-plug)
+[vim-plug](https://github.com/junegunn/vim-plug)
 
 ```lua
 call plug#begin('~/.vim/plugged')
