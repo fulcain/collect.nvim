@@ -11,6 +11,7 @@ a plugin that opens a clipboard (buffer) to collect some data in it
         title_pose = "left",
         height = 25,
         width = 80,
+        -- border could be none, single, double or shadow.
         border = "rounded",
         toggleKeymap = "<leader>cn"
     })

@@ -12,7 +12,7 @@ local content_storage = {}
 --- @field title_pos string? Position of the title, either "left", "center", or "right" (default: "left").
 --- @field height number? Height of the floating window (default: 25).
 --- @field width number? Width of the floating window (default: 80).
---- @field border string? Border style for the window (default: "rounded").
+--- @field border string? Border style for the window (default: "rounded") could be :`none`, `single`, `double` or `shadow`
 --- @field toggleKeymap string? Keymap for toggling the window (default: "<leader>cn").
 
 --- Sets up the module with the given options.
