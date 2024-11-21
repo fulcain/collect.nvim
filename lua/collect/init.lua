@@ -6,6 +6,17 @@ local win_id = nil
 -- In-memory storage for content
 local content_storage = {}
 
+--- Configuration options for the module
+--- @class CollectOptions
+--- @field title string? The title displayed in the window (default: "Collect").
+--- @field title_pos string? Position of the title, either "left", "center", or "right" (default: "left").
+--- @field height number? Height of the floating window (default: 25).
+--- @field width number? Width of the floating window (default: 80).
+--- @field border string? Border style for the window (default: "rounded").
+--- @field toggleKeymap string? Keymap for toggling the window (default: "<leader>cn").
+
+--- Sets up the module with the given options.
+--- @param opts CollectOptions
 function M.setup(opts)
 	opts = opts or {}
 	M.toggle(opts)
