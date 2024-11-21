@@ -1,2 +1,2 @@
 collect.nvim	collect.nvim.txt	/*collect.nvim*
-collect.open()	collect.nvim.txt	/*collect.open()*
+collect.toggle()	collect.nvim.txt	/*collect.toggle()*
