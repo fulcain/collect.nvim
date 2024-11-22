@@ -41,6 +41,17 @@ local function save_to_file()
 	path:write(json_data, "w")
 end
 
+local function check_for_buf_close()
+	--- TODO: check for user pressing keys
+	vim.api.nvim_create_autocmd("BufEnter", {
+		buffer = buf_id,
+		callback = function()
+			local pressedKey = vim.api.nvim_buf_get_keymap(0, "n")
+			print(vim.inspect(pressedKey))
+		end,
+	})
+end
+
 -- Load content from the file (persistent storage)
 local function load_from_file()
 	local path = Path:new(cache_config)
@@ -169,5 +180,7 @@ end
 
 -- On startup, load content from file
 load_from_file()
+
+check_for_buf_close()
 
 return M
