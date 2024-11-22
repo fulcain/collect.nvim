@@ -127,9 +127,7 @@ local function check_for_buf_close()
 
 			-- Restore original functionality if specified
 			if value.prevAction then
-				vim.keymap.set(value.mode, value.key, function()
-					vim.cmd(value.prevAction)
-				end, value.opts)
+				vim.keymap.set(value.mode, value.key, value.prevAction)
 			end
 		end, value.opts)
 	end

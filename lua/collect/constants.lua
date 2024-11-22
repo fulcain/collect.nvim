@@ -9,7 +9,7 @@ M.close_keys = {
 	{
 		mode = "n",
 		key = "ZZ",
-		prevAction = "<cmd>qa!<cr>",
+		prevAction = "<cmd>q<cr>",
 		opts = {},
 	},
 	{
