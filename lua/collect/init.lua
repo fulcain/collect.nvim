@@ -119,6 +119,23 @@ local function setup_resize_autocmd(opts)
 	})
 end
 
+-- Function to restore the original mapping or remove it
+local function restore_original_mapping(value, original_mapping)
+	if original_mapping then
+		local opts = {
+			noremap = original_mapping.noremap or false,
+			silent = original_mapping.silent or false,
+			expr = original_mapping.expr or false,
+			nowait = original_mapping.nowait or false,
+			replace_keycodes = original_mapping.replace_keycodes or false,
+			desc = original_mapping.desc or nil,
+		}
+		vim.keymap.set(value.mode, value.key, original_mapping.callback or original_mapping.rhs, opts)
+	else
+		vim.keymap.del(value.mode, value.key)
+	end
+end
+
 local function check_for_buf_close()
 	for _, value in ipairs(constants.close_keys) do
 		-- Get the existing keymap for the specified mode and key
@@ -134,14 +151,8 @@ local function check_for_buf_close()
 
 		vim.keymap.set(value.mode, value.key, function()
 			close_window()
-
-			-- Restore the original mapping if it existed
-			if original_mapping then
-				vim.keymap.set(value.mode, value.key, original_mapping.callback or original_mapping.rhs)
-			else
-				-- If no original mapping, remove the keymap
-				vim.keymap.del(value.mode, value.key)
-			end
+			-- Restore the original mapping using the new function
+			restore_original_mapping(value, original_mapping)
 		end, value.opts)
 	end
 end
