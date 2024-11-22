@@ -59,7 +59,7 @@ local function create_win_config(opts)
 
 	return {
 		relative = "editor",
-		row = math.floor((vim.o.lines - height) / 2),
+		row = math.floor(((vim.o.lines - height) / 2) - 1),
 		col = math.floor((vim.o.columns - width) / 2),
 		width = width,
 		height = height,
@@ -67,6 +67,7 @@ local function create_win_config(opts)
 		border = "single",
 		title = opts.title or "Collect",
 		title_pos = opts.title_pos or "left",
+		style = "minimal",
 	}
 end
 
@@ -117,9 +118,12 @@ local function open_window(opts, memory_key)
 	local config = create_win_config(opts)
 
 	-- Configure buffer options
-	vim.api.nvim_buf_set_option(buf_id, "buftype", "acwrite") -- Enable custom write behavior
-	vim.api.nvim_buf_set_option(buf_id, "bufhidden", "wipe") -- Wipe buffer on close
-	vim.api.nvim_buf_set_option(buf_id, "modifiable", true) -- Allow editing
+	vim.api.nvim_set_option_value("buftype", "acwrite", { buf = buf_id }) -- Enable custom write behavior
+	vim.api.nvim_set_option_value("bufhidden", "wipe", { buf = buf_id }) -- Wipe buffer on close
+	vim.api.nvim_set_option_value("modifiable", true, { buf = buf_id }) -- Allow editing
+	vim.api.nvim_set_option_value("number", true, {
+		win = win_id,
+	})
 
 	-- Load content from memory
 	load_memory_to_buffer(memory_key)
