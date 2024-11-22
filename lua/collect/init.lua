@@ -1,6 +1,6 @@
 local M = {}
-local constants = require("collect.constants")
 local Path = require("plenary.path")
+local constants = require("collect.constants")
 local data_path = vim.fn.stdpath("data")
 
 -- Get the current directory (project root)
@@ -121,13 +121,26 @@ end
 
 local function check_for_buf_close()
 	for _, value in ipairs(constants.close_keys) do
-		-- Handle normal mode keys
+		-- Get the existing keymap for the specified mode and key
+		local existing_keymap = vim.api.nvim_get_keymap(value.mode)
+		local original_mapping = nil
+
+		for _, map in ipairs(existing_keymap) do
+			if map.lhs == value.key then
+				original_mapping = map
+				break
+			end
+		end
+
 		vim.keymap.set(value.mode, value.key, function()
 			close_window()
 
-			-- Restore original functionality if specified
-			if value.prevAction then
-				vim.keymap.set(value.mode, value.key, value.prevAction)
+			-- Restore the original mapping if it existed
+			if original_mapping then
+				vim.keymap.set(value.mode, value.key, original_mapping.callback or original_mapping.rhs)
+			else
+				-- If no original mapping, remove the keymap
+				vim.keymap.del(value.mode, value.key)
 			end
 		end, value.opts)
 	end
