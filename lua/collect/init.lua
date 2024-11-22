@@ -29,6 +29,30 @@ function M.setup(opts)
 	M.toggle(opts)
 end
 
+-- Save content to a file
+local function save_to_file()
+	local json_data = vim.fn.json_encode(content_storage)
+	local path = Path:new(cache_config)
+
+	-- Ensure the directory exists before saving
+	path:parent():mkdir({ recursive = true })
+
+	-- Write the data to the file
+	path:write(json_data, "w")
+end
+
+-- Load content from the file (persistent storage)
+local function load_from_file()
+	local path = Path:new(cache_config)
+	if path:exists() then
+		local json_data = path:read()
+		local decoded = vim.fn.json_decode(json_data)
+		if decoded then
+			content_storage = decoded
+		end
+	end
+end
+
 local function create_win_config(opts)
 	local height = opts.height or 25
 	local width = opts.width or 80
@@ -110,7 +134,7 @@ local function open_window(opts, memory_key)
 			save_buffer_to_memory(memory_key)
 			buf_id = nil
 			win_id = nil
-			M.save_to_file() -- Save to file when the buffer is wiped
+			save_to_file() -- Save to file when the buffer is wiped
 		end,
 	})
 
@@ -127,30 +151,6 @@ local function close_window(memory_key)
 	end
 end
 
--- Save content to a file
-function M.save_to_file()
-  local json_data = vim.fn.json_encode(content_storage)
-  local path = Path:new(cache_config)
-
-  -- Ensure the directory exists before saving
-  path:parent():mkdir({ recursive = true })
-
-  -- Write the data to the file
-  path:write(json_data, "w")
-end
-
--- Load content from the file (persistent storage)
-function M.load_from_file()
-	local path = Path:new(cache_config)
-	if path:exists() then
-		local json_data = path:read()
-		local decoded = vim.fn.json_decode(json_data)
-		if decoded then
-			content_storage = decoded
-		end
-	end
-end
-
 function M.toggle(opts)
 	local memory_key = "collect_data"
 
@@ -164,6 +164,6 @@ function M.toggle(opts)
 end
 
 -- On startup, load content from file
-M.load_from_file()
+load_from_file()
 
 return M
