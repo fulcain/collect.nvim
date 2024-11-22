@@ -1,4 +1,5 @@
 local M = {}
+local constants = require("collect.constants")
 local Path = require("plenary.path")
 local data_path = vim.fn.stdpath("data")
 
@@ -13,6 +14,7 @@ local win_id = nil
 
 -- In-memory storage for content
 local content_storage = {}
+local memory_key = "collect_data"
 
 --- Configuration options for the module
 --- @class CollectOptions
@@ -39,17 +41,6 @@ local function save_to_file()
 
 	-- Write the data to the file
 	path:write(json_data, "w")
-end
-
-local function check_for_buf_close()
-	--- TODO: check for user pressing keys
-	vim.api.nvim_create_autocmd("BufEnter", {
-		buffer = buf_id,
-		callback = function()
-			local pressedKey = vim.api.nvim_buf_get_keymap(0, "n")
-			print(vim.inspect(pressedKey))
-		end,
-	})
 end
 
 -- Load content from the file (persistent storage)
@@ -102,6 +93,16 @@ local function load_memory_to_buffer(key)
 	vim.api.nvim_buf_set_lines(buf_id, 0, -1, false, lines)
 end
 
+local function close_window()
+	if win_id and vim.api.nvim_win_is_valid(win_id) then
+		save_buffer_to_memory(memory_key)
+		save_to_file()
+		vim.api.nvim_win_close(win_id, true)
+		win_id = nil
+		buf_id = nil
+	end
+end
+
 local function resize_window(opts)
 	if win_id and vim.api.nvim_win_is_valid(win_id) then
 		local config = create_win_config(opts)
@@ -118,7 +119,23 @@ local function setup_resize_autocmd(opts)
 	})
 end
 
-local function open_window(opts, memory_key)
+local function check_for_buf_close()
+	for _, value in ipairs(constants.close_keys) do
+		-- Handle normal mode keys
+		vim.keymap.set(value.mode, value.key, function()
+			close_window()
+
+			-- Restore original functionality if specified
+			if value.prevAction then
+				vim.keymap.set(value.mode, value.key, function()
+					vim.cmd(value.prevAction)
+				end, value.opts)
+			end
+		end, value.opts)
+	end
+end
+
+local function open_window(opts)
 	-- If already open, bring the window into focus
 	if win_id and vim.api.nvim_win_is_valid(win_id) then
 		vim.api.nvim_set_current_win(win_id)
@@ -155,32 +172,21 @@ local function open_window(opts, memory_key)
 
 	-- Set up resize autocmd to make the buffer responsive
 	setup_resize_autocmd(opts)
-end
 
-local function close_window(memory_key)
-	if win_id and vim.api.nvim_win_is_valid(win_id) then
-		save_buffer_to_memory(memory_key)
-		vim.api.nvim_win_close(win_id, true)
-		win_id = nil
-		buf_id = nil
-	end
+	check_for_buf_close()
 end
 
 function M.toggle(opts)
-	local memory_key = "collect_data"
-
 	vim.keymap.set("n", opts.toggle_keymap or "<leader>cn", function()
 		if win_id and vim.api.nvim_win_is_valid(win_id) then
-			close_window(memory_key)
+			close_window()
 		else
-			open_window(opts, memory_key)
+			open_window(opts)
 		end
 	end, { desc = "Toggle collect.nvim" })
 end
 
 -- On startup, load content from file
 load_from_file()
-
-check_for_buf_close()
 
 return M
