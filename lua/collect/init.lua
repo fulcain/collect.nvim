@@ -18,8 +18,8 @@ local content_storage = {}
 --- @class CollectOptions
 --- @field title string? The title displayed in the window (default: "Collect").
 --- @field title_pos string? Position of the title, either "left", "center", or "right" (default: "left").
---- @field height number? Height of the floating window (default: 25).
---- @field width number? Width of the floating window (default: 80).
+--- @field height number? Height of the floating window (default: 15).
+--- @field width number? Width of the floating window (default: 70).
 --- @field toggle_keymap string? Keymap for toggling the window (default: "<leader>cn").
 
 --- Sets up the module with the given options.
@@ -54,8 +54,8 @@ local function load_from_file()
 end
 
 local function create_win_config(opts)
-	local height = opts.height or 25
-	local width = opts.width or 80
+	local height = opts.height or 15
+	local width = opts.width or 70
 
 	return {
 		relative = "editor",

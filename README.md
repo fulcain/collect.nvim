@@ -71,8 +71,8 @@ local collect = require("collect")
 collect.setup({
     title = "Collect",
     title_pose = "left",
-    height = 25,
-    width = 80,
+    height = 15,
+    width = 70,
     toggle_keymap = "<leader>cn"
 })
 ```
