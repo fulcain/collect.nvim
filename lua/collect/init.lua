@@ -93,16 +93,6 @@ local function load_memory_to_buffer(key)
 	vim.api.nvim_buf_set_lines(buf_id, 0, -1, false, lines)
 end
 
-local function close_window()
-	if win_id and vim.api.nvim_win_is_valid(win_id) then
-		save_buffer_to_memory(memory_key)
-		save_to_file()
-		vim.api.nvim_win_close(win_id, true)
-		win_id = nil
-		buf_id = nil
-	end
-end
-
 local function resize_window(opts)
 	if win_id and vim.api.nvim_win_is_valid(win_id) then
 		local config = create_win_config(opts)
@@ -119,41 +109,29 @@ local function setup_resize_autocmd(opts)
 	})
 end
 
--- Function to restore the original mapping or remove it
-local function restore_original_mapping(value, original_mapping)
-	if original_mapping then
-		local opts = {
-			noremap = original_mapping.noremap or false,
-			silent = original_mapping.silent or false,
-			expr = original_mapping.expr or false,
-			nowait = original_mapping.nowait or false,
-			replace_keycodes = original_mapping.replace_keycodes or false,
-			desc = original_mapping.desc or nil,
-		}
-		vim.keymap.set(value.mode, value.key, original_mapping.callback or original_mapping.rhs, opts)
-	else
-		vim.keymap.del(value.mode, value.key)
+local function close_window()
+	if win_id and vim.api.nvim_win_is_valid(win_id) then
+		save_buffer_to_memory(memory_key)
+		save_to_file()
+
+		-- Restore all close key mappings before closing the window
+		for _, value in ipairs(constants.close_keys) do
+			-- Remove our buffer-local mapping
+			vim.keymap.del(value.mode, value.key, { buffer = buf_id })
+		end
+
+		vim.api.nvim_win_close(win_id, true)
+		win_id = nil
+		buf_id = nil
 	end
 end
 
 local function check_for_buf_close()
 	for _, value in ipairs(constants.close_keys) do
-		-- Get the existing keymap for the specified mode and key
-		local existing_keymap = vim.api.nvim_get_keymap(value.mode)
-		local original_mapping = nil
-
-		for _, map in ipairs(existing_keymap) do
-			if map.lhs == value.key then
-				original_mapping = map
-				break
-			end
-		end
-
+		-- Set buffer-local mappings
 		vim.keymap.set(value.mode, value.key, function()
 			close_window()
-			-- Restore the original mapping using the new function
-			restore_original_mapping(value, original_mapping)
-		end, value.opts)
+		end, vim.tbl_extend("force", value.opts or {}, { buffer = buf_id }))
 	end
 end
 
