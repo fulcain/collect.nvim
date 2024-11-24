@@ -164,31 +164,31 @@ local function open_window(opts)
 		return
 	end
 
+	-- Create a new buffer and window
 	buf_id = vim.api.nvim_create_buf(false, true)
 	local config = create_win_config(opts)
 
 	-- Configure buffer options
-	vim.api.nvim_set_option_value("buftype", "acwrite", { buf = buf_id }) -- Enable custom write behavior
-	vim.api.nvim_set_option_value("bufhidden", "wipe", { buf = buf_id }) -- Wipe buffer on close
-	vim.api.nvim_set_option_value("modifiable", true, { buf = buf_id }) -- Allow editing
-	vim.api.nvim_set_option_value("number", true, {
-		win = win_id,
-	})
-
-	-- Load content from memory
-	load_memory_to_buffer(memory_key)
+	vim.api.nvim_set_option_value("buftype", "acwrite", { buf = buf_id })
+	vim.api.nvim_set_option_value("bufhidden", "wipe", { buf = buf_id })
+	vim.api.nvim_set_option_value("modifiable", true, { buf = buf_id })
 
 	-- Create the floating window
 	win_id = vim.api.nvim_open_win(buf_id, true, config)
 
-	-- Automatically save content to memory when the window is closed
+	-- Enable line numbers for the window
+	vim.api.nvim_win_set_option(win_id, "number", true)
+
+	-- Load content from memory
+	load_memory_to_buffer(memory_key)
+
 	vim.api.nvim_create_autocmd("BufWipeout", {
 		buffer = buf_id,
 		callback = function()
 			save_buffer_to_memory(memory_key)
+			save_to_file()
 			buf_id = nil
 			win_id = nil
-			save_to_file() -- Save to file when the buffer is wiped
 		end,
 	})
 
