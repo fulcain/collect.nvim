@@ -4,11 +4,13 @@ A plugin that opens a clipboard (buffer) to collect some data in it.
 
 ## Table of Contents
 
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Default Options](#default-options)
-
----
+<details>
+<summary>Click to show</summary>
+    
+* [Requirements](#requirements)
+* [Installation](#installation)
+* [Default Options](#default-options)
+</details>
 
 ## Requirements
 
